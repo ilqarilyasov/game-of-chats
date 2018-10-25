@@ -1,0 +1,23 @@
+{
+  "images" : [
+    {
+      "idiom" : "universal",
+      "filename" : "kisspng-daenerys-targaryen-tyrion-lannister-house-stark-ho-halo-wars-5ac495fa1b4884.2077535515228328901118.jpg",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "kisspng-daenerys-targaryen-tyrion-lannister-house-stark-ho-halo-wars-5ac495fa1b4884.2077535515228328901118-1.jpg",
+      "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "kisspng-daenerys-targaryen-tyrion-lannister-house-stark-ho-halo-wars-5ac495fa1b4884.2077535515228328901118-2.jpg",
+      "scale" : "3x"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  }
+}
