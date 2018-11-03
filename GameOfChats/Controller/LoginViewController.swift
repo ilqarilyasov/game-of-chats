@@ -56,34 +56,6 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @objc func handleRegister() {
-        guard let email = emailTextField.text,
-            let password = passwordTextField.text,
-        let name = nameTextField.text else { return }
-        
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if error != nil {
-                NSLog("Error authentication")
-                return
-            }
-            
-            guard let uid = result?.user.uid else { return }
-            
-            // successfully authenticated user
-            let ref = Database.database().reference()
-            let usersReference = ref.child("users").child(uid)
-            let values = ["name": name, "email": email]
-            usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
-                if err != nil {
-                    NSLog("Error saving user")
-                    return
-                }
-                
-                self.dismiss(animated: true, completion: nil)
-            })
-        }
-    }
-    
     let nameTextField: UITextField = {
        let textField = UITextField()
         textField.placeholder = "Name"
@@ -131,8 +103,6 @@ class LoginViewController: UIViewController {
         
         return imageView
     }()
-    
-    
     
     lazy var loginRegisterSegmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: ["Login", "Register"])

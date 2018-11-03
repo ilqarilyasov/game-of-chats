@@ -7,8 +7,61 @@
 //
 
 import UIKit
+import Firebase
 
 extension LoginViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    @objc func handleRegister() {
+        guard let email = emailTextField.text,
+            let password = passwordTextField.text,
+            let name = nameTextField.text else { return }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+            if error != nil {
+                NSLog("Error authentication")
+                return
+            }
+            
+            guard let uid = result?.user.uid else { return }
+            
+            // successfully authenticated user
+            let imageName = UUID().uuidString
+            let storageRef = Storage.storage().reference().child("profile_images").child("\(imageName).png")
+            guard let image = self.profileImageView.image else { return }
+            if let imageData = image.pngData() {
+                storageRef.putData(imageData, metadata: nil, completion: { (_, error) in
+                    if let error = error {
+                        NSLog("Error uploading profile image to Firebase Storage: \(error.localizedDescription)")
+                        return
+                    }
+                    
+                    storageRef.downloadURL(completion: { (url, error) in
+                        if let error = error {
+                            NSLog("Error uploading profile image to Firebase Storage: \(error.localizedDescription)")
+                            return
+                        }
+                        
+                        guard let url = url?.absoluteString else { return }
+                        let values = ["name": name, "email": email, "profileImageURL": url]
+                        self.registerUserIntoDatabase(uid: uid, values: values)
+                    })
+                })
+            }
+        }
+    }
+    
+    private func registerUserIntoDatabase(uid: String, values: [String: Any]) {
+        let ref = Database.database().reference()
+        let usersReference = ref.child("users").child(uid)
+        usersReference.updateChildValues(values, withCompletionBlock: { (err, ref) in
+            if err != nil {
+                NSLog("Error saving user")
+                return
+            }
+            
+            self.dismiss(animated: true, completion: nil)
+        })
+    }
     
     @objc func handleSelectProfileImageView() {
         let picker = UIImagePickerController()
